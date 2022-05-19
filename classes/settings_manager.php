@@ -89,11 +89,14 @@ class settings_manager {
     }
 
     public function buildchildren(&$array, $node, $delimiter) {
+        if (!isset($node->children)) {
+            return;
+        }
         foreach ($node->children as $row => $child) {
             foreach ($child as $row2 => $c) {
                 $array[$c->id] = $delimiter."".$c->title;
 
-                if ($c->children) {
+                if (isset($c->children)) {
                     $this->buildchildren($array, $c, $delimiter.'-');
                 }
             }
@@ -109,7 +112,7 @@ class settings_manager {
 
         foreach ($nodes as $node) {
             $option[$node->id] = $node->title;
-            if ($node->children) {
+            if (isset($node->children)) {
                 $this->buildchildren($option, $node, '-');
             }
         }
@@ -131,16 +134,26 @@ class settings_manager {
     }
 
     public function buildsearchchildren(&$array, $node) {
+
+        if (!isset($node->children)) {
+            return;
+        }
         foreach ($node->children as $row => $child) {
             foreach ($child as $row2 => $c) {
                 $array[$c->id] = $c;
-                if ($c->children) {
+                if (isset($c->children)) {
                     $this->buildsearchchildren($array, $c);
                 }
             }
         }
     }
 
+    /**
+     * Undocumented function
+     *
+     * @param integer $root
+     * @return void
+     */
     public function buildsearchtree(int $root) {
         global $DB;
         $entries = $DB->get_records_sql("SELECT * FROM {local_wb_faq_entry} ORDER BY type, parentid");
@@ -150,11 +163,11 @@ class settings_manager {
 
         foreach ($nodes as $node) {
             $option[$node->id] = $node;
-            if ($node->children) {
+            if (isset($node->children)) {
                 $this->buildsearchchildren($option, $node);
             }
         }
-        return $option;
+        return array_values($option);
     }
 
 
@@ -167,6 +180,7 @@ class settings_manager {
      * @return mixed
      */
     public function load_from_cache(bool $json = false, $root = null) {
+
         $cache = \cache::make('local_wb_faq', 'faqcache');
         $cachekey = 'faq_cache';
         $cachedrawdata = $cache->get($cachekey);
@@ -291,18 +305,7 @@ class settings_manager {
         $formdata->type  = $record->type;
         return $formdata;
     }
-    /**
-     * Undocumented function
-     *
-     * @param string $categoryname
-     * @return stdClass
-     */
-    public static function get_id_from_categoryname(string $categoryname) {
-        global $DB;
 
-        $id = $DB->get_record_sql("SELECT id FROM {local_wb_faq_entry} WHERE title={$categoryname} AND type = 0 ORDER BY parentid, type ASC");
-        return $id;
-    }
     /**
      *
      * This is to update or delete an entity if it does not exist
@@ -312,5 +315,33 @@ class settings_manager {
     public function delete() {
         global $DB;
         $DB->delete_records('local_wb_faq_entry', array('id' => $this->id));
+    }
+
+    /**
+     * Return category by name.
+     *
+     * @param string $name
+     * @return null|int
+     */
+    public static function return_category_id_by_name(string $name) {
+
+        global $DB;
+
+        if (!$name) {
+            return 0;
+        }
+
+        if (!$records = $DB->get_records('local_wb_faq_entry', ['type' => 0, 'title' => $name])) {
+            return null;
+        } else {
+            if (count($records) === 1) {
+
+                $record = reset($records);
+
+                return $record->id;
+            } else {
+                return null;
+            }
+        }
     }
 }

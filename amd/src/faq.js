@@ -27,6 +27,10 @@ import Templates from 'core/templates';
  *
  */
 export const init = (data, root) => {
+
+    // eslint-disable-next-line no-console
+    console.log('data', data);
+
     render(root, data);
     addEvents(data, root);
 };
@@ -36,21 +40,26 @@ export const init = (data, root) => {
  */
 function addEvents(data, root) {
     let select = document.getElementById('local_wb_faq');
+
     select.addEventListener('click', (e) => {
         if (e.target.dataset.action == "goto") {
             render(e.target.dataset.targetid, data);
         }
     });
     let category = document.querySelector('#id_categorypicker');
-    category.addEventListener('change', (e) => {
-        let faqid = category.value;
-        if (category.value == '') {
-            faqid = root;
-            console.log(category.value);
-            console.log(root);
-        }
-        render(faqid, data);
-    });
+
+    if (category) {
+        category.addEventListener('change', () => {
+            let faqid = category.value;
+            if (category.value == '') {
+                faqid = root;
+            }
+
+            // eslint-disable-next-line no-console
+            console.log(data);
+            render(faqid, data);
+        });
+    }
 }
 
 /**
@@ -58,14 +67,31 @@ function addEvents(data, root) {
  * @param {*} id
  */
 function render(id, data) {
+
+    // eslint-disable-next-line no-console
+    console.log(id, data);
+
     // Load the specific category data
-    let json = data[id];
+    let json = JSON.parse(data);
+
+    json = json[id];
+
+    // eslint-disable-next-line no-console
+    console.log(json);
+
     // Select Container
     let container = document.getElementById('local_wb_faq');
     // Empty Container
     container.innerHTML = "";
     // Render
     Templates.renderForPromise('local_wb_faq/faq', json).then(({html}) => {
+
+        // eslint-disable-next-line no-console
+        console.log(html);
         container.insertAdjacentHTML('afterbegin', html);
+        return;
+    }).catch(e => {
+        // eslint-disable-next-line no-console
+        console.log(e);
     });
 }

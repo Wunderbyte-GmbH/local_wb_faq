@@ -28,9 +28,8 @@ import DynamicForm from 'core_form/dynamicform';
  * Gets called from mustache template.
  *
  */
-export const init = (data, startid) => {
-    console.log(data);
-    console.log(startid);
+export const init = (data) => {
+
     addEvents(data);
     renderforcache(data);
 };
@@ -44,11 +43,11 @@ function addEvents(data) {
         if (e.target.hasAttribute('data-action')) {
             e.target.setAttribute('disabled', 'disabled');
             if (e.target.dataset.action == "goto") {
-                console.log("goto");
+
                 render(e.target.dataset.targetid, data);
             }
             if (e.target.dataset.action == "quickedit") {
-                console.log("quickedit");
+
                 renderedit(e.target.dataset.targetid, e.target.dataset.type, data);
             }
             if (e.target.dataset.action == "delete") {
@@ -72,40 +71,39 @@ function render(id, data) {
     // Render
     Templates.renderForPromise('local_wb_faq/admincontent', json).then(({html}) => {
         container.insertAdjacentHTML('beforeend', html);
+    }).catch(e => {
+        // eslint-disable-next-line no-console
+        console.log(e);
     });
-};
+}
 
 /**
  * Renders template from asd for the categoryid
  * @param {*} id
  */
  export const deleteentry = (id) => {
-    console.log('delete' + id);
     Ajax.call([{
         methodname: "local_wb_faq_delete_entry",
         args: {
             'id' : id
         },
         done: function() {
-            console.log("");
         },
     }]);
-}
+};
 
 
 
-function renderedit(id, type, data) {
+function renderedit(id, type) {
     let json = {'id' : type + '-' + id};
     let  container = document.querySelector('#local_wb_faq_admin .view-' + type + '-' + id);
     let editrow = '#local_wb_faq_admin .edit-' + type + '-' + id;
     let td = '#local_wb_faq_admin .edit-' + type + '-' + id + ' td';
     let hidden = 'hidden';
     if (id == 0) {
-        console.log('id 0');
         editrow = '#local_wb_faq_admin #local_wb_faq_new_entry form';
         container = document.querySelector('#local_wb_faq_new_entry');
         td = '#local_wb_faq_admin #local_wb_faq_new_entry';
-        type = type;
         hidden = 'addnew';
     }
 
@@ -118,16 +116,12 @@ function renderedit(id, type, data) {
         'id' : id,
         'type' : type
         });
-    console.log("dynamis");
     return dynamicForm;
     }).then((dynamicForm) => {
         dynamicForm.addEventListener(dynamicForm.events.FORM_SUBMITTED, (e) => {
             e.preventDefault();
-            const response = e.detail;
             container.classList.remove(hidden);
-            console.log(response);
             document.querySelector(editrow).remove();
-            console.log("refresh");
             window.location.reload();
         });
         dynamicForm.addEventListener(dynamicForm.events.FORM_CANCELLED, (e) => {
@@ -138,8 +132,10 @@ function renderedit(id, type, data) {
     });
 }
 
+/**
+ *
+ * @param {object} json
+ */
 function renderforcache(json) {
-    Templates.renderForPromise('local_wb_faq/quickedit', json[1]).then(({html}) => {
-        html = "";
-    });
+    Templates.renderForPromise('local_wb_faq/quickedit', json[1]);
 }

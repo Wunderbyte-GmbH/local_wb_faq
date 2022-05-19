@@ -68,3 +68,8 @@ $string['searchcategory'] = '... search category';
 $string['root'] = 'Top Level';
 
 $string['wb_faq:canedit'] = 'Manage FAQ';
+
+// Shortcodes
+
+$string['displayfaqs'] = "Zeige FAQs";
+$string['categorynotfound'] = "Kategorie nicht gefunden";

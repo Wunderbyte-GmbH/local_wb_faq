@@ -34,10 +34,14 @@
     }
 }}
 
+<div id="local_wb_faq">
+
+</div>
+
 
 {{#js}}
 console.log({{{json}}}, {{{root}}});
-  require(['local_wb_faq/searchinput'], function(search) {
-    search.init('searchfaq', '#searchfaq', '.accordion-item','.accordion-body', {{{json}}});
+  require(['local_wb_faq/faq', 'local_wb_faq/searchinput'], function(faq,search) {
+    faq.init({{{json}}}, {{{root}}});
   });
 {{/js}}

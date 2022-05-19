@@ -1,5 +1,5 @@
 <?php
-// This file is part of Moodle - https://moodle.org/
+// This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -12,22 +12,24 @@
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Plugin version and other meta-data are defined here.
+ * Shortcodes for mod booking
  *
- * @package     local_wb_faq
- * @copyright   2022 Wunderbyte GmbH <info@wunderbyte.at>
- * @author      Thomas Winkler
- * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package local_wb_faq
+ * @subpackage db
+ * @since Moodle 3.11
+ * @copyright 2022 Georg Maißer
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'local_wb_faq';
-$plugin->release = '0.1.0';
-$plugin->version = 2022051901;
-$plugin->requires = 2020061500;
-$plugin->supported = [39, 311];
-$plugin->maturity = MATURITY_ALPHA;
+$shortcodes = [
+    'faq' => [
+        'callback' => 'local_wb_faq\shortcodes::show_faq',
+        'wraps' => false,
+        'description' => 'displayfaqs'
+    ]
+];
