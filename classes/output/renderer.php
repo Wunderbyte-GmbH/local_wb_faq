@@ -22,7 +22,7 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_entites\output;
+namespace local_wb_faq\output;
 
 use plugin_renderer_base;
 use templatable;
@@ -36,35 +36,24 @@ defined('MOODLE_INTERNAL') || die();
 class renderer extends plugin_renderer_base {
 
     /**
-     * Render a mooduell view page.
+     * Render a faq list.
      *
      * @param templatable $viewpage
      * @return string|boolean
      */
-    public function render_viewpage(templatable $viewpage) {
-        $data = $viewpage->export_for_template($this);
-        return $this->render_from_template('mod_mooduell/viewpage', $data);
+    public function render_list_faq(templatable $data) {
+        $data = $data->export_for_template($this);
+        return $this->render_from_template('local_wb_faq/faq_list', $data);
     }
 
     /**
-     * Render viewpage students.
+     * Render a searchfield.
+     *
      * @param templatable $viewpage
-     * @return bool|string
-     * @throws \moodle_exception
+     * @return string|boolean
      */
-    public function render_viewpagestudents(templatable $viewpage) {
-        $data = $viewpage->export_for_template($this);
-        return $this->render_from_template('mod_mooduell/viewpagestudents', $data);
-    }
-
-    /**
-     * Render a mooduell list of questions
-     * @param templatable $viewpage
-     * @return bool|string
-     * @throws \moodle_exception
-     */
-    public function render_viewquestions(templatable $viewpage) {
-        $data = $viewpage->export_for_template($this);
-        return $this->render_from_template('mod_mooduell/viewquestions', $data);
+    public function render_display_search(templatable $data) {
+        $data = $data->export_for_template($this);
+        return $this->render_from_template('local_wb_faq/display_search', $data);
     }
 }

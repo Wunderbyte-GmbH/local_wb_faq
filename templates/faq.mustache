@@ -34,18 +34,18 @@
     }
 }}
 
-  <h2>{{title}}</h2>
-  {{^toplevel}}
-    <div class="btn btn-primary mb-2 px-4 fa fa-chevron-left" data-action="goto" data-targetid='{{parentid}}'></div>
-  {{/toplevel}}
+<div class="current-faq">
+  <h3 class="btn btn-primary mb-2 px-4" data-action="goto" data-targetid='{{parentid}}'>{{title}}</h3>
+
 
 
   {{#categories}}
     {{>local_wb_faq/category}}
   {{/categories}}
 
-<div class="accordion" id="wb-faq-accordion">
-  {{#entries}}
-    {{>local_wb_faq/entry}}
-  {{/entries}}
+  <div class="accordion" id="wb-faq-accordion">
+    {{#entries}}
+      {{>local_wb_faq/entry}}
+    {{/entries}}
+  </div>
 </div>

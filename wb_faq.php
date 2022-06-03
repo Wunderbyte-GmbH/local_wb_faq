@@ -21,7 +21,11 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use local_wb_faq\form\categories;
+use local_wb_faq\output\display_search;
+use local_wb_faq\output\faq_list;
 use local_wb_faq\settings_manager;
+
 require_once('../../config.php');
 
 
@@ -29,29 +33,26 @@ $delid = optional_param('del', 0, PARAM_INT);
 $context = \context_system::instance();
 $PAGE->set_context($context);
 require_login();
+
 $PAGE->set_url(new moodle_url('/local/wb_faq/wb_faq.php', array()));
 
 $title = "FAQ";
 $PAGE->set_title($title);
 $PAGE->set_heading($title);
 
-
-$test = new settings_manager();
-$id = $test->get_id_from_categoryname('"test"');
-$root = 0;
-$d = $test->load_from_cache(true, $root);
-
-$o = $test->buildselect($root);
-
-$searchtree  = $test->buildsearchtree($root);
-$recordsvalues = array_values($searchtree);
-$search['json'] = json_encode($recordsvalues, true);
-
-$data['json'] = $d;
-$data['root'] = $root;
 echo $OUTPUT->header();
-$mform = new local_wb_faq\form\categories($o);
-$mform->display();
-echo $OUTPUT->render_from_template('local_wb_faq/search', $search);
-echo $OUTPUT->render_from_template('local_wb_faq/js', $data);
+
+$renderer = $PAGE->get_renderer('local_wb_faq');
+$data = new display_search(0);
+echo $renderer->render_display_search($data);
+
+// $sm = new settings_manager(0);
+// $categorytree = $sm->buildselect(0);
+
+// $mform = new categories($categorytree);
+// $mform->display();
+
+$data = new faq_list(0);
+echo $renderer->render_list_faq($data);
+
 echo $OUTPUT->footer();

@@ -19,12 +19,14 @@
  *
  * @package    local_wb_faq
  * @copyright  2022 Wunderbyte Gmbh <info@wunderbyte.at>
- * @author     Thomas Winkler
+ * @author     Georg Maißer
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  **/
 
 namespace local_wb_faq\output;
 
+use local_wb_faq\form\categories;
+use local_wb_faq\settings_manager;
 use renderable;
 use renderer_base;
 use templatable;
@@ -32,34 +34,32 @@ use templatable;
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * viewpage class to display view.php
- * @package mod_mooduell
+ * display faq list
+ * @package local_wb_faq
  *
  */
-class viewpage implements renderable, templatable {
+class display_search implements renderable, templatable {
 
     /**
-     * An array of headings
+     * data is the array used for output.
      *
      * @var array
      */
-    protected $headings;
-
-    /**
-     * An array of rows
-     *
-     * @var array
-     */
-    protected $rows;
+    private $data = [];
 
     /**
      * Constructor.
-     * @param array $data
+     * @param integer $categoryid
+     * @param boolean $displaysearch
      */
-    public function __construct(array $data) {
+    public function __construct($categoryid = 0) {
 
+        $sm = new settings_manager();
 
+        $searchrecords = $sm->buildsearchtree($categoryid);
 
+        $data['json'] = json_encode($searchrecords, true);
+        $data['root'] = $categoryid;
 
         $this->data = $data;
     }
@@ -72,12 +72,6 @@ class viewpage implements renderable, templatable {
      */
     public function export_for_template(renderer_base $output) {
         $data = $this->data;
-
-        /*if (isset($data[''questions'])) {
-            foreach ($data['questions'] as $question) {
-                $question->replace_category_id_by_name();
-            }
-        }*/
 
         return $data;
     }

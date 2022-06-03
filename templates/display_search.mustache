@@ -35,17 +35,11 @@
 }}
 
 <input class='my-2 w-auto form-control' type='text' id='searchfaq' placeholder='... search faq'>
-<div id="wb_faq_searchbox">
-
-</div>
-<div id="local_wb_faq">
-
-</div>
-
+<div id="wb_faq_searchbox"></div>
 
 {{#js}}
 console.log({{{json}}}, {{{root}}});
-  require(['local_wb_faq/faq'], function(faq) {
-    faq.init({{{json}}}, {{{root}}});
+  require(['local_wb_faq/searchinput'], function(search) {
+    search.init('searchfaq', '#searchfaq', '.accordion-item','.accordion-body', {{{json}}});
   });
 {{/js}}
