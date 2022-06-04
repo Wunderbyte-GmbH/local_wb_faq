@@ -210,9 +210,12 @@ class settings_manager {
             if ($record->type == 0) {
                 $dataarr[$record->id] = $record;
                 $dataarr[$record->parentid]->categories[] = $record;
+                // $dataarr[$record->parentid]->parenttitle = $dataarr[$dataarr[$record->parentid]->parentid]->title;
                 if ($record->parentid == 0) {
-                    $dataarr[$record->parentid]->title = "";
+                    // TODO add string
+                    $dataarr[$record->parentid]->title = "FAQ";
                     $dataarr[$record->parentid]->toplevel = true;
+                    $dataarr[$record->parentid]->parentid = 0;
                 }
             }
             if ($record->type == 1) {

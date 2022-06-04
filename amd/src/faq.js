@@ -25,25 +25,36 @@ import Templates from 'core/templates';
 /**
  * Gets called from mustache template.
  *
+ * @param {*} data
+ * @param {integer} root
  */
 export const init = (data, root) => {
 
     // eslint-disable-next-line no-console
     console.log('data', data);
 
-    render(root, data);
+    render(root, data, root);
     addEvents(data, root);
 };
 
 /**
- * adds Evente to toggle switch
+ * Adds Evente to toggle switch
+ * @param {*} data
+ * @param {integer} root
  */
 function addEvents(data, root) {
     let select = document.getElementById('local_wb_faq');
 
     select.addEventListener('click', (e) => {
         if (e.target.dataset.action == "goto") {
-            render(e.target.dataset.targetid, data);
+            render(e.target.dataset.targetid, data, root);
+        }
+    });
+    let searchbox = document.getElementById('wb_faq_searchbox');
+
+    searchbox.addEventListener('click', (e) => {
+        if (e.target.dataset.action == "goto") {
+            render(e.target.dataset.targetid, data, root);
         }
     });
     let category = document.querySelector('#id_categorypicker');
@@ -57,34 +68,35 @@ function addEvents(data, root) {
 
             // eslint-disable-next-line no-console
             console.log(data);
-            render(faqid, data);
+            render(faqid, data, root);
         });
     }
 }
 
 /**
  * Renders template from jsonobject for the categoryid
- * @param {*} id
+ * @param {integer} id
+ * @param {*} data
+ * @param {integer} root
  */
-function render(id, data) {
+function render(id, data, root) {
 
     // eslint-disable-next-line no-console
-    console.log(id, data);
+    console.log(id, data, root);
 
     // Load the specific category data
     let json = JSON.parse(data);
-
-    json = json[id];
-
-    // eslint-disable-next-line no-console
-    console.log(json);
+    let templatedata = json[id];
+    templatedata.parenttitle = json[templatedata.parentid].title;
+    templatedata.roottitle = json[root].title;
+    templatedata.rootid = root;
 
     // Select Container
     let container = document.getElementById('local_wb_faq');
     // Empty Container
     container.innerHTML = "";
     // Render
-    Templates.renderForPromise('local_wb_faq/faq', json).then(({html}) => {
+    Templates.renderForPromise('local_wb_faq/faq', templatedata).then(({html}) => {
 
         // eslint-disable-next-line no-console
         console.log(html);

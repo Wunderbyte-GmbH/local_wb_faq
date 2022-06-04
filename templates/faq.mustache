@@ -35,7 +35,15 @@
 }}
 
 <div class="current-faq">
-  <h3 class="btn btn-primary mb-2 px-4" data-action="goto" data-targetid='{{parentid}}'>{{title}}</h3>
+  <div class="d-flex">
+  {{^toplevel}}
+  <h3 class="btn btn-primary mb-2 px-4 mr-2" data-action="goto" data-targetid='{{rootid}}'>{{roottitle}}</h3>
+  <h3 class="mr-2"> / </h3>
+  <h3 class="btn btn-primary mb-2 px-4 mr-2" data-action="goto" data-targetid='{{parentid}}'>{{parenttitle}}</h3>
+  <h3 class="mr-2"> / </h3>
+  {{/toplevel}}
+  <h3 class="mr-2">{{title}}</h3>
+  </div>
 
 
 
@@ -49,3 +57,4 @@
     {{/entries}}
   </div>
 </div>
+
